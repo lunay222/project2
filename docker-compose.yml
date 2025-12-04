@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  # OCR Microservice - Handles text extraction from images
+  ocr-service:
+    build:
+      context: ./ocr-service
+      dockerfile: Dockerfile
+    container_name: study-coach-ocr
+    ports:
+      - "8001:8001"
+    environment:
+      - TESSERACT_CMD=/usr/bin/tesseract
+    volumes:
+      - ./ocr-service:/app
+      - /tmp:/tmp
+    networks:
+      - study-coach-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Ollama LLM Service - Handles AI content generation
+  ollama:
+    image: ollama/ollama:latest
+    container_name: study-coach-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    networks:
+      - study-coach-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    # Note: Model will be pulled automatically on first use
+    # Or manually: docker exec study-coach-ollama ollama pull llama3.2:1b
+
+  # API Gateway / Orchestrator - Coordinates all services
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: study-coach-gateway
+    ports:
+      - "8000:8000"
+    environment:
+      - OCR_SERVICE_URL=http://ocr-service:8001
+      - LLM_SERVICE_URL=http://ollama:11434
+      - OLLAMA_MODEL=llama3.2:1b
+      - TTS_ENABLED=true
+    volumes:
+      - ./api-gateway:/app
+    depends_on:
+      - ocr-service
+      - ollama
+    networks:
+      - study-coach-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  ollama-data:
+    driver: local
+
+networks:
+  study-coach-network:
+    driver: bridge
