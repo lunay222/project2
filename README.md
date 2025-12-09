@@ -132,6 +132,8 @@ npm install
 npm start
 or
 npx expo start --tunnel (if not using Mac)
+Intructions:
+to load app, then press settings icon (top right), then manually input IP address (can be found in terminal using (ifconfig))
 ```
 
 ## API Endpoints
