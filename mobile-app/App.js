@@ -356,7 +356,7 @@ export default function App() {
       // Start requests 3 seconds apart so they don't all hit at once
       // This is faster than sequential but more reliable than all-at-once
       const isLongText = text.length > 5000;
-      const estimatedTime = isLongText ? '3-5 minutes' : '2-4 minutes';
+      const estimatedTime = isLongText ? '5-10 minutes' : '10-15 minutes';
       
       console.log(`Generating content in parallel (staggered start) - text length: ${text.length} chars...`);
       
