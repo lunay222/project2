@@ -219,8 +219,11 @@ Response: {"success": true, "text": "extracted text"}
 
 **Mobile App** (in `mobile-app/services/api.js`):
 - The app **automatically detects** your computer's IP address on startup
+- **Auto-detection works best on home WiFi networks**
+- **University/enterprise networks** often have client isolation - use manual IP entry in Settings if auto-detection fails
 - If auto-detection fails, you can manually configure the IP in the app's Settings screen
-- The `DEFAULT_API_BASE_URL` is used as a fallback if auto-detection fails
+- Manual IP entry works on **all devices and networks** - this is the most reliable method
+- See `TROUBLESHOOTING.md` for more details on IP detection limitations
 
 ## Development
 
@@ -319,6 +322,8 @@ docker exec study-coach-ollama ollama pull llama3.2:1b
 
 - **DESIGN.md**: Complete architecture design with microservice diagrams, data flow, and AI tool mapping
 - **SETUP_AND_RUN.md**: Step-by-step setup and run instructions
+- **TROUBLESHOOTING.md**: Common issues and solutions
+- **DEVICE_COMPATIBILITY.md**: IP auto-detection compatibility across devices and networks
 - **tests/TESTING_WALKTHROUGH.md**: Comprehensive testing guide with debugging walkthroughs
 - **TESTING_REPORT.md**: Testing documentation with results
 

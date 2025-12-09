@@ -529,7 +529,7 @@ export default function App() {
     );
 
     try {
-      const detectedIP = await detectBackendIP(true); // Allow scanning when manually triggered
+      const detectedIP = await detectBackendIP();
       
       if (detectedIP) {
         const detectedUrl = `http://${detectedIP}:8000`;
@@ -760,20 +760,34 @@ export default function App() {
         </View>
       ) : (
         <>
-          <TouchableOpacity
-            style={[styles.button, (!apiUrl || loading) && styles.buttonDisabled]}
-            onPress={handleScanNotes}
-            disabled={loading || !apiUrl}
-          >
-            <Text style={styles.buttonText}>📷 Scan Notes</Text>
-          </TouchableOpacity>
-          
-          {loading && <ActivityIndicator size="large" style={styles.loader} />}
+          {apiUrl ? (
+            <>
+              <TouchableOpacity
+                style={[styles.button, loading && styles.buttonDisabled]}
+                onPress={handleScanNotes}
+                disabled={loading}
+              >
+                <Text style={styles.buttonText}>📷 Scan Notes</Text>
+              </TouchableOpacity>
+              
+              {loading && <ActivityIndicator size="large" style={styles.loader} />}
+              <Text style={styles.apiUrlHint}>Connected to: {apiUrl}</Text>
+            </>
+          ) : (
+            <View style={styles.detectionBox}>
+              <Text style={styles.detectionText}>⚠️ Backend Not Detected</Text>
+              <Text style={styles.detectionSubtext}>
+                Auto-detection failed. Please enter your computer's IP address manually in Settings.
+              </Text>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => setMode('settings')}
+              >
+                <Text style={styles.buttonText}>⚙️ Open Settings to Enter IP</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </>
-      )}
-      
-      {apiUrl && !isDetectingIP && (
-        <Text style={styles.apiUrlHint}>Backend: {apiUrl}</Text>
       )}
     </View>
   );

@@ -120,6 +120,59 @@ If your computer's IP changed:
 - **Network request failed**: Can't reach backend (network/firewall issue)
 - **TurboModule error**: App compatibility issue (should be fixed now)
 
+### Issue 4: IP Auto-Detection Not Working
+
+**Symptoms:**
+- Auto-detection fails to find backend
+- App shows "Could not automatically detect backend IP"
+- Network scanning times out or finds nothing
+
+**Why Auto-Detection Might Fail:**
+
+1. **Expo IP Extraction Issues:**
+   - Different Expo versions may expose connection info differently
+   - Some devices/platforms (iOS vs Android) may not provide Expo connection details
+   - The `global.__expo.manifestUrl` might not be available on all devices
+   - Network configuration differences between devices
+
+2. **Network Scanning Limitations:**
+   - **Client Isolation**: Many university/corporate WiFi networks prevent devices from seeing each other
+   - **Firewall Rules**: Some networks block port scanning or restrict device-to-device communication
+   - **Different IP Ranges**: Not all networks use common ranges (192.168.x.x, 172.x.x.x, 10.x.x.x)
+   - **Network Segmentation**: Devices might be on different subnets even on the same WiFi
+
+3. **Platform Differences:**
+   - iOS and Android handle network permissions differently
+   - Some devices have stricter network security policies
+   - VPNs can interfere with network detection
+
+**Solutions:**
+
+1. **Manual IP Entry (Recommended if auto-detection fails):**
+   - Go to Settings in the app
+   - Find your computer's IP address:
+     - **Windows**: Run `ipconfig` in terminal, look for WiFi adapter IP
+     - **Mac/Linux**: Run `ifconfig | grep "inet "` or `ip addr show`
+   - Enter the IP address manually in the Settings screen
+   - This is the most reliable method across all devices and networks
+
+2. **Check Network Compatibility:**
+   - Ensure both devices are on the same WiFi network
+   - Disable VPN if active
+   - Some networks (especially enterprise/university) have client isolation that prevents auto-detection
+   - In these cases, manual IP entry is required
+
+3. **Verify Backend Accessibility:**
+   - Test from phone browser: `http://YOUR_COMPUTER_IP:8000/health`
+   - If this works, the network is fine - just use manual entry
+   - If this doesn't work, it's a network/firewall issue, not an auto-detection problem
+
+4. **Network-Specific Notes:**
+   - **Home WiFi**: Auto-detection usually works well
+   - **University/Corporate WiFi**: Often has client isolation - use manual entry
+   - **Mobile Hotspot**: Usually works, but IP might change frequently
+   - **VPN Active**: Disable VPN for best results
+
 ## Still Having Issues?
 
 1. Check all services are running: `docker ps`
@@ -127,4 +180,5 @@ If your computer's IP changed:
 3. Check Ollama logs: `docker logs study-coach-ollama`
 4. Verify network connectivity from phone
 5. Check Windows Firewall settings
+6. **If auto-detection fails, use manual IP entry in Settings - this works on all devices and networks**
 
