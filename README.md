@@ -129,7 +129,9 @@ PYTHONPATH=/path/to/project/api-gateway:$PYTHONPATH pytest tests/ -v
 ```bash
 cd mobile-app
 npm install
-npm start or npx expo start --tunnel (if not using Mac)
+npm start
+or
+npx expo start --tunnel (if not using Mac)
 ```
 
 ## API Endpoints
