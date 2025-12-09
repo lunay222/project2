@@ -338,7 +338,7 @@ export default function App() {
       // Show initial status - this helps users know something is happening
       Alert.alert(
         '⏳ Generating Content',
-        'This may take 1-3 minutes. The AI is creating quizzes, summaries, and flashcards from your notes...',
+        'This may take 5-10 minutes. The AI is creating quizzes, summaries, and flashcards from your notes...',
         [{ text: 'OK' }]
       );
       
